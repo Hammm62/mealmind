@@ -88,7 +88,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     )
                   : ListView.separated(
                       itemCount: filteredMeals.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, _) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final meal = filteredMeals[index];
                         return Card(
