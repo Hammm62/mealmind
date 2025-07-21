@@ -49,66 +49,93 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Menu Favorit')),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Menu Favorit'),
+        backgroundColor: Colors.pinkAccent,
+        foregroundColor: Colors.white,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Cari menu favorit...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                fillColor: Colors.grey.shade100,
+                filled: true,
               ),
             ),
-          ),
-          Expanded(
-            child: filteredMeals.isEmpty
-                ? const Center(child: Text('Tidak ada menu yang cocok.'))
-                : ListView.builder(
-                    itemCount: filteredMeals.length,
-                    itemBuilder: (context, index) {
-                      final meal = filteredMeals[index];
-                      return Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+            const SizedBox(height: 16),
+            Expanded(
+              child: filteredMeals.isEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.sentiment_dissatisfied,
+                            color: Colors.grey, size: 64),
+                        SizedBox(height: 10),
+                        Text(
+                          'Tidak ada menu yang cocok.',
+                          style: TextStyle(color: Colors.grey),
                         ),
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(12),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              meal.imagePath,
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                            ),
+                      ],
+                    )
+                  : ListView.separated(
+                      itemCount: filteredMeals.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final meal = filteredMeals[index];
+                        return Card(
+                          color: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          title: Text(
-                            meal.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(12),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                meal.imagePath,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
+                            title: Text(
+                              meal.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            subtitle: Row(
+                              children: [
+                                const Icon(Icons.timer,
+                                    size: 16, color: Colors.grey),
+                                const SizedBox(width: 4),
+                                Text(meal.duration),
+                              ],
+                            ),
+                            trailing: const Icon(Icons.favorite,
+                                color: Colors.pinkAccent),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/detail',
+                                  arguments: meal);
+                            },
                           ),
-                          subtitle: Text(meal.duration),
-                          trailing: const Icon(Icons.favorite, color: Colors.red),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/detail', arguments: meal);
-                          },
-                        ),
-                      );
-                    },
-                  ),
-          ),
-        ],
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

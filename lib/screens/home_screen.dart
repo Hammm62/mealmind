@@ -62,14 +62,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTagChip(String tag) {
     final selected = selectedTags.contains(tag);
-    return ChoiceChip(
-      label: Text(tag),
-      labelStyle: TextStyle(
-        color: selected ? Colors.white : Colors.black,
+    return FilterChip(
+      label: Text(
+        tag.toUpperCase(),
+        style: TextStyle(
+          color: selected ? Colors.white : Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      selectedColor: Theme.of(context).colorScheme.primary,
-      backgroundColor: Colors.grey.shade200,
       selected: selected,
+      backgroundColor: Colors.grey.shade200,
+      selectedColor: Colors.teal,
       onSelected: (_) {
         setState(() {
           selected ? selectedTags.remove(tag) : selectedTags.add(tag);
@@ -84,9 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
         .toList();
 
     if (favoriteMeals.isEmpty) {
-      return const Text(
-        'Belum ada menu favorit.',
-        style: TextStyle(color: Colors.grey),
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            'Belum ada menu favorit.',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
       );
     }
 
@@ -95,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         const Text(
           'Menu Favorit Kamu',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         ...favoriteMeals.map((meal) => Card(
@@ -103,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              elevation: 3,
+              elevation: 4,
               child: ListTile(
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -127,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: () async {
                   await Navigator.pushNamed(context, '/detail', arguments: meal);
-                  _loadFavorites(); // Refresh setelah kembali
+                  _loadFavorites();
                 },
               ),
             )),
@@ -138,28 +146,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('MealMind'),
+        backgroundColor: Colors.teal,
+        title: const Text('MealMind', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.calendar_today),
+            icon: const Icon(Icons.calendar_today, color: Colors.white),
             tooltip: 'Menu Hari Ini',
             onPressed: () async {
               await Navigator.pushNamed(context, '/daily');
-              _loadFavorites(); // Refresh juga kalau ada interaksi
+              _loadFavorites();
             },
           )
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 'Pilih Preferensi',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Wrap(
@@ -170,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 24),
               const Text(
                 'Batas Waktu Memasak',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Wrap(
@@ -182,9 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: selectedMaxDuration == dur
                                 ? Colors.white
                                 : Colors.black,
+                            fontWeight: FontWeight.w600,
                           ),
-                          selectedColor:
-                              Theme.of(context).colorScheme.secondary,
+                          selectedColor: Colors.teal.shade300,
                           backgroundColor: Colors.grey.shade200,
                           selected: selectedMaxDuration == dur,
                           onSelected: (_) {
@@ -196,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ))
                     .toList(),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 30),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () async {
@@ -210,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'maxDuration': selectedMaxDuration
                         },
                       );
-                      _loadFavorites(); // Refresh setelah kembali
+                      _loadFavorites();
                     } else {
                       showDialog(
                         context: context,
@@ -231,8 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: const Icon(Icons.fastfood),
                   label: const Text('Tampilkan Saran Menu'),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
